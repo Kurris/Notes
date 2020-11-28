@@ -4,7 +4,7 @@
 
 ### 初步使用
 
-* 在`Progam`的`CreateHostBuilder`方法中替换ServiceCollection容器
+* 在`Progam`的`CreateHostBuilder`方法中替换`ServiceCollection`容器
 
 	```C#
 	UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -29,13 +29,15 @@
 	```
 * 最后在类中的构造函数使用,就能够被注入
 	```c#
-	public EFTestsController(MyDbContext context, IClock clock, ILogger<EFTestsController> logger)
-        {
-            this.clock = clock;
-            this._context = context;
-            this._logger = logger;
-        }
+	private readonly IClock _clock;
+	
+	public EFTestsController(IClock clock)
+    {
+        this._clock = clock;
+    }
 	```
+	
+### 生命周期
 
 ```C#
 //瞬时生命周期：注册之后，每次获取到的服务实例都不一样（默认的注册方式）
@@ -58,4 +60,33 @@ containerBuilder.RegisterType<CNClock>().As<IClock>().InstancePerRequest();
 containerBuilder.RegisterType<CNClock>().InstancePerOwned<IClock>();
 ```
 
-### 
+### 反射创建服务,减少代码的重复注入
+
+```C#
+ string localPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Assembly service = Assembly.LoadFrom(Path.Combine(localPath, "WebApiCore.IOC.Service.dll"));
+
+            Assembly iservice = Assembly.Load("WebApiCore.IOC.Interface");
+
+            builder.RegisterAssemblyTypes(service, iservice)
+                .InstancePerLifetimeScope()
+                .AsImplementedInterfaces()
+                .PropertiesAutowired();
+```
+
+
+
+### 属性注入
+
+* 在`Startup`的`ConfigureServices`方法中,对`services.AddControllers()`或者`services.AddMvc()`,使用`AddControllersAsServices()`增加其作为服务的使用
+
+* 然后将控制器类和属性类都注入到`IOC`中
+      ```c#
+      builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.Name.EndsWith("Controller")).PropertiesAutowired();  
+      ```
+      ```C#
+      builder.RegisterType<AAA>();
+      ```
+* 这样在控制器中,类型为`AAA`的属性就能够被注入
+  
+  
