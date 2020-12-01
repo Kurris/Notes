@@ -32,9 +32,9 @@
 	private readonly IClock _clock;
 	
 	public EFTestsController(IClock clock)
-    {
-        this._clock = clock;
-    }
+  {
+      this._clock = clock;
+  }
 	```
 	
 ### 生命周期
@@ -70,8 +70,8 @@ containerBuilder.RegisterType<CNClock>().InstancePerOwned<IClock>();
 
             builder.RegisterAssemblyTypes(service, iservice)
                 .InstancePerLifetimeScope()
-                .AsImplementedInterfaces()
-                .PropertiesAutowired();
+                .AsImplementedInterfaces()//注册,通过实现的接口
+                .PropertiesAutowired();//可通过属性注入
 ```
 
 
@@ -83,10 +83,6 @@ containerBuilder.RegisterType<CNClock>().InstancePerOwned<IClock>();
 * 然后将控制器类和属性类都注入到`IOC`中
       ```c#
       builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(x => x.Name.EndsWith("Controller")).PropertiesAutowired();  
-      ```
-      ```C#
       builder.RegisterType<AAA>();
       ```
 * 这样在控制器中,类型为`AAA`的属性就能够被注入
-  
-  
