@@ -58,37 +58,7 @@
 	- `z` 解压缩
   
 
-[返回](# Linux Cli)
-
-### 安装Dotnet
-- 安装微软包证书
-	`sudo rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm`
-- 安装SDK
-	`sudo yum install dotnet-sdk-5.0`
-- 安装运行时
-	`sudo yum install dotnet-runtime-5.0`
-- `cd /root/dotnet/publish`
-- `dotnet Ligy.Project.WebApi.dll --urls http://127.0.0.1:8080`
-
-### MySql
-
-- 安装源`wget https://repo.mysql.com//mysql80-community-release-el8-1.noarch.rpm`
-- 编译`rpm -ivh mysql80-community-release-el8-1.noarch.rpm --nodeps --force`
-- 安装服务`yum install mysql-server`
-
-`vi /etc/my.cnf 添加 skip-grant-tables`
-
-```SQL
-update user set authentication_string=password("Sa123456!") , password_last_changed=now() where user="root";
-update user set authentication_string="*BF6EF00D956EE719C12B30A4F65D70456DE506B1" , password_last_changed=now() where user="root";
-
-```
-`grant all privileges on *.* to "mysql.infoschema"@"localhost" identified by "Sa123456!";`
-`create user 'mysql.infoschema'@'localhost' identified by 'Sa123456!';`
-
-`flush privileges;`
-
-### Firewall
+### 防火墙
 - 查看服务状态
 	`systemctl status firewalld`
 - 查看程序状态
@@ -106,6 +76,34 @@ update user set authentication_string="*BF6EF00D956EE719C12B30A4F65D70456DE506B1
 - 查看当前规则
 	`firewall-cmd --list-ports`
 
+
+[返回](# Linux Cli)
+
+### 安装Dotnet
+- 安装微软包证书
+	`sudo rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm`
+- 安装SDK
+	`sudo yum install dotnet-sdk-5.0`
+- 安装运行时
+	`sudo yum install dotnet-runtime-5.0`
+- 执行命令
+	- `cd /root/dotnet/publish`
+	- `dotnet Ligy.Project.WebApi.dll --urls http://127.0.0.1:8080`
+
+### MySql
+- 安装服务`yum install mysql-server`
+
+`vi /etc/my.cnf 添加 skip-grant-tables`
+
+```SQL
+update user set authentication_string=password("Sa123456!") , password_last_changed=now() where user="root";
+update user set authentication_string="*BF6EF00D956EE719C12B30A4F65D70456DE506B1" , password_last_changed=now() where user="root";
+
+```
+`grant all privileges on *.* to "mysql.infoschema"@"localhost" identified by "Sa123456!";`
+`create user 'mysql.infoschema'@'localhost' identified by 'Sa123456!';`
+
+`flush privileges;`
 
 ### Supervistor
 
